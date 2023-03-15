@@ -107,7 +107,22 @@ if basedata is not None and inputdata is not None :
                     f.displayWarningSidebar(f.statusInfo2(futuredf, inputcolumns))
 
 
-        st.plotly_chart(fig)
+        st.plotly_chart(fig) 
+        outputData = pd.DataFrame()
+        outputData["Date"] = basedf[dateColumn] 
+        outputData["Actual"] = basedf[targetColumn] 
+        outputData["Forecast"] = basedf["results"]  
+        
+        futureOutputData = finalFuture[[futureDateColumn,"results"]]
+        futureOutputData.columns = ["Date","Forecast"] 
+        futureOutputData["Actual"] = float("nan")
+        
+        outputData = pd.concat([outputData,futureOutputData])
+        
+        
+
+        st.dataframe(outputData) 
+        outputData.to_excel("outputdata.xlsx")
 
     else: 
         f.displayWarningSidebar(f.statusInfo(basedf,inputdf))
