@@ -121,6 +121,20 @@ if basedata is not None and inputdata is not None :
         
         outputData = pd.concat([outputData,futureOutputData])
         
+        @st.cache
+        def convert_df(df):
+            # IMPORTANT: Cache the conversion to prevent computation on every rerun
+            return df.to_csv().encode('utf-8')
+
+        csv = convert_df(outputData)
+        st.download_button(
+            label="Download data as CSV",
+            data=csv,
+            file_name='finaloutput.csv',
+            mime='text/csv',
+        )
+        
+        
         
 
         st.dataframe(outputData) 
