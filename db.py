@@ -111,7 +111,7 @@ if basedata is not None and inputdata is not None :
         outputData = pd.DataFrame()
         outputData["Date"] = basedf[dateColumn] 
         outputData["Actual"] = basedf[targetColumn] 
-        outputData["Forecast"] = basedf["results"]  
+        outputData["Forecast"] = finalDf["results"]  
         
         futureOutputData = finalFuture[[futureDateColumn,"results"]]
         futureOutputData.columns = ["Date","Forecast"] 
