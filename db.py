@@ -113,9 +113,11 @@ if basedata is not None and inputdata is not None :
         outputData["Actual"] = basedf[targetColumn] 
         outputData["Forecast"] = finalDf["results"]  
         
-        futureOutputData = finalFuture[futureDateColumn,"results"]
-        futureOutputData.columns = ["Date","Forecast"] 
+        futureoutputData = pd.DataFrame()
+        futureOutputData["Date"] = futuredf[futureDateColumn]
         futureOutputData["Actual"] = float("nan")
+        futureOutputData["Forecast"] = finalFuture["results"] 
+        
         
         outputData = pd.concat([outputData,futureOutputData])
         
