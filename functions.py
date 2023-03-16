@@ -228,3 +228,7 @@ def matchLists(ls1:list, ls2:list):
 
 #################################################################################
 ################################################################################## 
+
+def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_csv().encode('utf-8')

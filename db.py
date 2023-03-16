@@ -5,13 +5,13 @@ import numpy as np
 import plotly.graph_objects as go
 
 
+st.set_page_config(page_title="MMM Simulation")
+
 "# MMM Simulation" 
-f.guidelineInfo()
 
-basedata = st.file_uploader('base data:', type=["xlsx", "csv"]) 
-inputdata = st.file_uploader('input data:', type=["xlsx", "csv"]) 
+basedata = st.file_uploader('Train Data', type=["xlsx", "csv"]) 
+inputdata = st.file_uploader('Parameters', type=["xlsx", "csv"]) 
 neededIndex = ["Adstock Decay", "Adstock Diminished", "Coefficient"]
-
 
 
 ################################################################################
@@ -34,9 +34,8 @@ if basedata is None and inputdata is not None :
                                     columns=inputcolumns) 
         baseSampleDf["(your date column)"] = pd.date_range("2022-01-01", periods=10,freq="D")
         
-        f.displayDf(inputdf)
-        with st.expander("see expected base data format"): 
-            st.dataframe(baseSampleDf.set_index("(your date column)"))
+        """#### Parameters"""
+        f.displayDf(inputdf,"case5")
     
     else:
         f.displayWarningSidebar(f.statusInfo(inputdf=inputdf))
@@ -47,7 +46,7 @@ if basedata is None and inputdata is not None :
 
 if basedata is not None and inputdata is None :
     basedf = f.readFile(basedata) 
-    st.header("Base Data")
+    """#### Train Data"""
     f.displayDf(basedf,"case2")
   
 
@@ -63,10 +62,10 @@ if basedata is not None and inputdata is not None :
     basedf = f.readFile(basedata) 
     inputdf = f.readFile(inputdata, index_col=0)
   
-    st.header("Base Data")
+    """#### Train Data"""
     f.displayDf(basedf,"case3")
 
-    st.header("Input Data") 
+    """#### Parameters""" 
     f.displayDf(inputdf,"case4") 
 
     if f.statusInfo(basedf,inputdf) == []: 
@@ -102,43 +101,33 @@ if basedata is not None and inputdata is not None :
 
                     fig.add_trace(go.Scatter(x=futuredf[futureDateColumn], y=finalFuture["results"], name ="MMM future forecast" ))
 
+
+                    outputData = pd.DataFrame()
+                    outputData["Date"] = basedf[dateColumn] 
+                    outputData["Actual"] = basedf[targetColumn] 
+                    outputData["Forecast"] = finalDf["results"]  
+        
+                    futureOutputData = pd.DataFrame()
+                    futureOutputData["Date"] = futuredf[futureDateColumn]
+                    futureOutputData["Actual"] = float("nan")
+                    futureOutputData["Forecast"] = finalFuture["results"] 
+                    
+                    
+                    outputData = pd.concat([outputData,futureOutputData])
+
+                    csv = f.convert_df(outputData) 
+                    st.download_button( label="Download data as CSV", data=csv,
+                                        file_name='finaloutput.csv',mime='text/csv',)
+                    
+                    st.dataframe(outputData) 
+        
                 else : 
                     f.displayDf(futuredf,"future")
                     f.displayWarningSidebar(f.statusInfo2(futuredf, inputcolumns))
 
 
-        st.plotly_chart(fig) 
-        outputData = pd.DataFrame()
-        outputData["Date"] = basedf[dateColumn] 
-        outputData["Actual"] = basedf[targetColumn] 
-        outputData["Forecast"] = finalDf["results"]  
-        
-        futureOutputData = pd.DataFrame()
-        futureOutputData["Date"] = futuredf[futureDateColumn]
-        futureOutputData["Actual"] = float("nan")
-        futureOutputData["Forecast"] = finalFuture["results"] 
-        
-        
-        outputData = pd.concat([outputData,futureOutputData])
-        
-        @st.cache
-        def convert_df(df):
-            # IMPORTANT: Cache the conversion to prevent computation on every rerun
-            return df.to_csv().encode('utf-8')
+        st.plotly_chart(fig)
 
-        csv = convert_df(outputData)
-        st.download_button(
-            label="Download data as CSV",
-            data=csv,
-            file_name='finaloutput.csv',
-            mime='text/csv',
-        )
-        
-        
-        
-
-        st.dataframe(outputData) 
-        outputData.to_excel("outputdata.xlsx")
 
     else: 
         f.displayWarningSidebar(f.statusInfo(basedf,inputdf))
