@@ -123,16 +123,16 @@ def statusInfo (basedf=pd.DataFrame(),inputdf=pd.DataFrame()):
     status_messages = []
 
     if not isAllNumeric(inputdf) and len(inputdf) != 0 : 
-        status_messages.append("Input data contains non-numeric columns.") 
+        status_messages.append("Parameters data contains non-numeric columns.") 
     
     if not inputIndexCheck(inputdf) and len(inputdf) != 0 : 
-        status_messages.append("Input data index names doesn't match.") 
+        status_messages.append("Parameters data index names doesn't match.") 
     
     if not isOnlyOneDateColumn(basedf) and len(basedf) != 0: 
-        status_messages.append("Base data contains  more than one or no number of date columns.")
+        status_messages.append("Train data contains  more than one or no number of date columns.")
     
     if not isAllNumericExceptDate(basedf) and len(basedf) != 0: 
-        status_messages.append("Base data contains non-numeric columns.") 
+        status_messages.append("Train data contains non-numeric columns.") 
 
     if not set(inputcolumns) == set(basecolumns) and len(inputdf) != 0 and len(basedf) != 0:  
         unmathced_list = matchLists(basecolumns,inputcolumns) 
@@ -147,13 +147,13 @@ def statusInfo (basedf=pd.DataFrame(),inputdf=pd.DataFrame()):
 def statusInfo2(futuredf:pd.DataFrame, neededColumns:list): 
     status_messages = [] 
     if not isOnlyOneDateColumn(futuredf) : 
-        status_messages.append("Future data contains  more than one or no number of date columns.")
+        status_messages.append("Data to forecast contains  more than one or no number of date columns.")
 
     if not isAllNumericExceptDate(futuredf) : 
-        status_messages.append("Future data contains non-numeric columns.") 
+        status_messages.append("Data to forecast contains non-numeric columns.") 
     
     if not set(neededColumns).issubset(set(futuredf.select_dtypes(include="number").columns)): 
-        status_messages.append("Future data column names don't match with base data.")
+        status_messages.append("Data to forecast column names don't match with base data.")
 
     return status_messages
 ############################################################################# 
