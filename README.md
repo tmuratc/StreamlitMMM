@@ -1,5 +1,5 @@
 # MMM (Marketing Mix Modelling) 
-This application aims to help for quick visuzalation MMM projects. 
+This application aims to help for quick visualization on MMM projects. 
 Once your train data and linear non-linear indicators are ready, you can use to see results in graph and take exports as follows: 
   - historcic actual values of target KPI 
   - MMM predictions on historic data 
