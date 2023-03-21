@@ -11,7 +11,7 @@ st.set_page_config(page_title="MMM Simulation")
 
 basedata = st.file_uploader('Train Data', type=["xlsx", "csv"]) 
 inputdata = st.file_uploader('Parameters', type=["xlsx", "csv"]) 
-neededIndex = ["Adstock Decay", "Adstock Diminished", "Coefficient"]
+#neededIndex = ["Adstock Decay", "Adstock Diminished", "Coefficient"]
 
 
 ################################################################################
@@ -96,8 +96,8 @@ if basedata is not None and inputdata is not None :
                 if f.statusInfo2(futuredf, inputcolumns) == [] : 
                     futureDateColumn = futuredf.select_dtypes(include="datetime").columns[0] 
                     firstTransformFuture = f.applyDecayAllDf(futuredf[inputcolumns], dict(inputdf.loc["Adstock Decay"]))
-                    secondTransformFuture = f.applyDiminishedAllDf(firstTransformDf, dict(inputdf.loc["Adstock Diminished"])) 
-                    finalFuture = f.applyMultiply(secondTransformDf, dict(inputdf.loc["Coefficient"]))
+                    secondTransformFuture = f.applyDiminishedAllDf(firstTransformFuture, dict(inputdf.loc["Adstock Diminished"])) 
+                    finalFuture = f.applyMultiply(secondTransformFuture, dict(inputdf.loc["Coefficient"]))
 
                     fig.add_trace(go.Scatter(x=futuredf[futureDateColumn], y=finalFuture["results"], name ="MMM future forecast" ))
 
